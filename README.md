@@ -27,10 +27,10 @@ module "falcon-7b" {
 terraform init
 ```
 
-One time initialization to setup python environment using venv and install deps
+Optional, if using `venv`, one time initialization to setup python environment and install deps
 ```
 cd .terraform/modules/falcon-7b
-make init && make install
+python3 -m venv .venv && . .venv/bin/activate && make install
 ```
 
 Now you can use normally
