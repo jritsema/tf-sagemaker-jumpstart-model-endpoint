@@ -31,6 +31,7 @@ resource "null_resource" "main" {
     id            = var.model_id
     name          = var.name
     instance_type = var.instance_type
+    region        = data.aws_region.current.name
   }
 
   provisioner "local-exec" {
@@ -56,7 +57,7 @@ resource "null_resource" "main" {
 
     environment = {
       TF_ACTION     = "destroy"
-      AWS_REGION    = data.aws_region.current.name
+      AWS_REGION    = self.triggers.region
       MODEL_ID      = self.triggers.id
       ENDPOINT_NAME = self.triggers.name
       INSTANCE_TYPE = self.triggers.instance_type
