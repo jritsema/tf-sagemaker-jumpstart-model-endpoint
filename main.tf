@@ -23,6 +23,8 @@ locals {
   envvars = { for k, v in var.environment : "TF_MODEL_${k}" => v }
 }
 
+data "aws_region" "current" {}
+
 resource "null_resource" "main" {
 
   triggers = {
@@ -36,6 +38,7 @@ resource "null_resource" "main" {
 
     environment = merge(tomap({
       TF_ACTION     = "create"
+      AWS_REGION    = data.aws_region.current.name
       MODEL_ID      = var.model_id
       ENDPOINT_NAME = var.name
       INSTANCE_TYPE = var.instance_type
@@ -53,6 +56,7 @@ resource "null_resource" "main" {
 
     environment = {
       TF_ACTION     = "destroy"
+      AWS_REGION    = data.aws_region.current.name
       MODEL_ID      = self.triggers.id
       ENDPOINT_NAME = self.triggers.name
       INSTANCE_TYPE = self.triggers.instance_type
@@ -61,3 +65,4 @@ resource "null_resource" "main" {
     command = ". .venv/bin/activate && python -u main.py"
   }
 }
+
